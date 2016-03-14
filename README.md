@@ -1,5 +1,5 @@
 # pylimit
-Rate limiting library for python using Redis
+Rate limiting library for python using Redis and leaky bucket algorithm
 
 # Prerequisites
 This library makes use of Redis and needs it as a prerequisite. Redis sentinel is also supported.
