@@ -38,3 +38,7 @@ is_allowed = limit.attempt('api_count')   # will return true if number of attemp
                                           # are less than or equal to 1000 in last 1 minute,
                                           # false otherwise
 ```
+
+
+# Reference
+https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/
