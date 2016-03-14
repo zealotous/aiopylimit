@@ -50,7 +50,39 @@ class PyLimit(object):
         self.period = period
         self.limit = limit
 
-    def attempt(self, namespace: str) -> bool:
+    def __can_attempt(self, namespace: str, add_attempt=True) -> bool:
+        """
+        Checks if a namespace is rate limited or not with including/excluding the current call
+
+        :param namespace: Rate limiting namespace
+        :type: str
+
+        :param add_attempt: Boolean value indicating if the current call should be considered as an attempt or not
+        :type add_attempt: bool
+
+        :return: Returns true if attempt can go ahead under current rate limiting rules, false otherwise
+        """
+        can_attempt = False
+        if not PyLimit.redis_helper:
+            raise PyLimitException("redis connection information not provided")
+        connection = PyLimit.redis_helper.get_atomic_connection()
+        current_time = int(round(time.time() * 1000000))
+        old_time_limit = current_time - (self.period * 1000000)
+        connection.zremrangebyscore(namespace, 0, old_time_limit)
+        connection.expire(namespace, self.period)
+        if add_attempt:
+            current_count = 0
+            connection.zadd(namespace, current_time, current_time)
+        else:
+            current_count = 1   # initialize at 1 to compensate the case that this attempt is not getting counted
+        connection.zrange(namespace, 0, -1)
+        redis_result = connection.execute()
+        current_count += len(redis_result[-1])
+        if current_count <= self.limit:
+            can_attempt = True
+        return can_attempt
+
+    def attempt(self, namespace: str):
         """
         Records an attempt and returns true of false depending on whether attempt can go through or not
 
@@ -59,19 +91,15 @@ class PyLimit(object):
 
         :return: Returns true if attempt can go ahead under current rate limiting rules, false otherwise
         """
-        can_attempt = False
-        if not PyLimit.redis_helper:
-            raise PyLimitException("redis connection information not provided")
-        connection = PyLimit.redis_helper.get_atomic_connection()
-        current_time = int(round(time.time() * 1000))
-        old_time_limit = current_time - (self.period * 1000)
-        connection.zremrangebyscore(namespace, 0, old_time_limit)
-        connection.expire(namespace, self.period)
-        connection.zadd(namespace, current_time, current_time)
-        connection.zrange(namespace, 0, -1, withscores=True)
-        redis_result = connection.execute()
-        current_count = len(redis_result[-1])
-        if current_count <= self.limit:
-            can_attempt = True
-        return can_attempt
+        return self.__can_attempt(namespace=namespace)
 
+    def is_rate_limited(self, namespace: str) -> bool:
+        """
+        Checks if a namespace is already rate limited or not without making any additional attempts
+
+        :param namespace:  Rate limiting namespace
+        :type namespace: str
+
+        :return:    Returns true if attempt can go ahead under current rate limiting rules, false otherwise
+        """
+        return not self.__can_attempt(namespace=namespace, add_attempt=False)
