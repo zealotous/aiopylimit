@@ -16,7 +16,7 @@ Suppose you want to limit the number of api calls to be 1000 per minute. It can 
 
 1.) Import the library
 ```
-from pylimit import PyLimit
+from pylimit.pylimit import PyLimit
 ```
 
 2.) Initialize the library

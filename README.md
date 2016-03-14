@@ -17,7 +17,7 @@ Suppose you want to limit the number of api calls to be 1000 per minute. It can 
 
 1.) Import the library
 ```
-from pylimit import PyLimit
+from pylimit.pylimit import PyLimit
 ```
 
 2.) Initialize the library
@@ -44,5 +44,6 @@ is_allowed = limit.attempt('api_count')   # will return true if number of attemp
 ```
 is_rate_limited = limit.is_rate_limited('api_count')  # will return true if this namespace is already rate limited, false otherwise
 ```
+
 # Reference
 https://engineering.classdojo.com/blog/2015/02/06/rolling-rate-limiter/
