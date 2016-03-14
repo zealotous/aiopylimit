@@ -12,7 +12,9 @@ class TestPyLimit(unittest.TestCase):
     def test_throttle(self):
         PyLimit.init(redis_host="localhost", redis_port=6379)
         limit = PyLimit()
-        limit.create('test_namespace', 10, 10)
+        limit.create('test_namespace',      # namespace
+                     10,                    # rate limit period in seconds
+                     10)                    # no of attempts in the time period
         for x in range(0, 20):
             time.sleep(.5)
             if x < 10:
