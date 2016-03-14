@@ -5,6 +5,12 @@ Rate limiting library for python using Redis
 This library makes use of Redis and needs it as a prerequisite. Redis sentinel is also supported.
 Make sure that Redis server is running before using this library
 
+# Installation
+
+```
+pip install pylimit
+```
+
 # Example
 For this example, let's assume that redis hostname is 'localhost' and port number is 6379
 Suppose you want to limit the number of api calls to be 1000 per minute. It can be done by the following steps.
