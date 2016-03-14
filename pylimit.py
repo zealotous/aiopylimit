@@ -7,7 +7,6 @@ class PyLimit(object):
     redis_helper = None     # type: RedisHelper
 
     def __init__(self):
-        self.namespace = None   # type: str
         self.period = None      # type: int
         self.limit = None       # type: int
 
@@ -32,12 +31,9 @@ class PyLimit(object):
             cls.redis_helper = RedisHelper(host=redis_host, port=redis_port, is_sentinel=is_sentinel_redis,
                                            sentinel_service=redis_sentinel_service)
 
-    def create(self, namespace: str, period: int, limit: int):
+    def create(self, period: int, limit: int):
         """
-        Creates a namespace for which rate limiting is to be implemented
-
-        :param namespace: Rate limiting namespace
-        :type: str
+        Creates a rate limiting rule with rate limiting period and attempt limit
 
         :param period: Rate limiting period in seconds
         :type: int
@@ -46,7 +42,6 @@ class PyLimit(object):
         :type: int
 
         """
-        self.namespace = namespace
         self.period = period
         self.limit = limit
 
