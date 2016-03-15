@@ -17,17 +17,17 @@ Suppose you want to limit the number of api calls to be 1000 per minute. It can 
 
 1.) Import the library
 ```
-from pylimit.pylimit import PyLimit
+from pylimit import PyRateLimit
 ```
 
 2.) Initialize the library
 ```
-PyLimit.init(redis_host="localhost", redis_port=6379)
+PyRateLimit.init(redis_host="localhost", redis_port=6379)
 ```
 
 3.) Create a rate limit namespace
 ```
-limit = PyLimit()
+limit = PyRateLimit()
 limit.create(60,                    # rate limit period in seconds
              100)                   # no of attempts in the time period
 ```
