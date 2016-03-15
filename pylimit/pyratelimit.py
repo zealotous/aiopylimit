@@ -1,9 +1,10 @@
-from redis_helper import RedisHelper
-from pylimit_exception import PyLimitException
 import time
 
+from pylimit.redis_helper import RedisHelper
+from pylimit.pyratelimit_exception import PyRateLimitException
 
-class PyLimit(object):
+
+class PyRateLimit(object):
     redis_helper = None     # type: RedisHelper
 
     def __init__(self):
@@ -58,9 +59,9 @@ class PyLimit(object):
         :return: Returns true if attempt can go ahead under current rate limiting rules, false otherwise
         """
         can_attempt = False
-        if not PyLimit.redis_helper:
-            raise PyLimitException("redis connection information not provided")
-        connection = PyLimit.redis_helper.get_atomic_connection()
+        if not PyRateLimit.redis_helper:
+            raise PyRateLimitException("redis connection information not provided")
+        connection = PyRateLimit.redis_helper.get_atomic_connection()
         current_time = int(round(time.time() * 1000000))
         old_time_limit = current_time - (self.period * 1000000)
         connection.zremrangebyscore(namespace, 0, old_time_limit)
