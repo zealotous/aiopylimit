@@ -5,11 +5,12 @@ import redis.client
 
 
 class RedisHelper(object):
-    def __init__(self, host: str, port: int, is_sentinel=False, sentinel_service=None):
+    def __init__(self, host: str, port: int, is_sentinel=False, sentinel_service=None, password=None):
         self.host = host
         self.port = port
         self.is_sentinel = is_sentinel
         self.sentinel_service = sentinel_service
+        self.password = password
 
     def get_connection(self, is_read_only=False) -> redis.StrictRedis:
         """
@@ -21,13 +22,17 @@ class RedisHelper(object):
         :return: Returns a StrictRedis connection
         """
         if self.is_sentinel:
-            sentinel = Sentinel([(self.host, self.port)])
+            kwargs = dict()
+            if self.password:
+                kwargs["password"] = self.password
+            sentinel = Sentinel([(self.host, self.port)], **kwargs)
             if is_read_only:
                 connection = sentinel.slave_for(self.sentinel_service, decode_responses=True)
             else:
                 connection = sentinel.master_for(self.sentinel_service, decode_responses=True)
         else:
-            connection = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True)
+            connection = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True,
+                                           password=self.password)
         return connection
 
     def get_atomic_connection(self) -> StrictPipeline:
@@ -37,9 +42,13 @@ class RedisHelper(object):
         :return: Returns a StrictPipeline object
         """
         if self.is_sentinel:
-            sentinel = Sentinel([(self.host, self.port)])
+            kwargs = dict()
+            if self.password:
+                kwargs["password"] = self.password
+            sentinel = Sentinel([(self.host, self.port)], **kwargs)
             pipeline = sentinel.master_for(self.sentinel_service, decode_responses=True).pipeline(True)
         else:
-            pipeline = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True).pipeline(True)
+            pipeline = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True,
+                                         password=self.password).pipeline(True)
         return pipeline
 

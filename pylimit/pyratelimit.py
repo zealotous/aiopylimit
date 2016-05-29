@@ -12,7 +12,8 @@ class PyRateLimit(object):
         self.limit = None       # type: int
 
     @classmethod
-    def init(cls, redis_host: str, redis_port: int, is_sentinel_redis=False, redis_sentinel_service="mymaster"):
+    def init(cls, redis_host: str, redis_port: int, is_sentinel_redis=False, redis_sentinel_service="mymaster",
+             redis_password=None):
         """
         Initializes redis connection
         :param redis_host: Hostname of redis server
@@ -22,25 +23,28 @@ class PyRateLimit(object):
         :type redis_port:int
 
         :param is_sentinel_redis: Parameter indicating if redis server is a sentinel server. Default is false
-        :type: bool
+        :type is_sentinel_redis: bool
 
         :param redis_sentinel_service: If redis server is a sentinel server, service name for redis sentinel
-        :type str
+        :type redis_sentinel_service: str
+
+        :param redis_password: Password for redis connection
+        :type redis_password: str
 
         """
         if not cls.redis_helper:
             cls.redis_helper = RedisHelper(host=redis_host, port=redis_port, is_sentinel=is_sentinel_redis,
-                                           sentinel_service=redis_sentinel_service)
+                                           sentinel_service=redis_sentinel_service, password=redis_password)
 
     def create(self, period: int, limit: int):
         """
         Creates a rate limiting rule with rate limiting period and attempt limit
 
         :param period: Rate limiting period in seconds
-        :type: int
+        :type period: int
 
         :param limit: Number of attempts permitted by rate limiting within a given period
-        :type: int
+        :type limit: int
 
         """
         self.period = period
@@ -51,7 +55,7 @@ class PyRateLimit(object):
         Checks if a namespace is rate limited or not with including/excluding the current call
 
         :param namespace: Rate limiting namespace
-        :type: str
+        :type namespace: str
 
         :param add_attempt: Boolean value indicating if the current call should be considered as an attempt or not
         :type add_attempt: bool
@@ -83,7 +87,7 @@ class PyRateLimit(object):
         Records an attempt and returns true of false depending on whether attempt can go through or not
 
         :param namespace: Rate limiting namespace
-        :type: str
+        :type namespace: str
 
         :return: Returns true if attempt can go ahead under current rate limiting rules, false otherwise
         """
