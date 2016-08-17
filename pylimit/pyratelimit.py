@@ -75,9 +75,9 @@ class PyRateLimit(object):
             connection.zadd(namespace, current_time, current_time)
         else:
             current_count = 1   # initialize at 1 to compensate the case that this attempt is not getting counted
-        connection.zrange(namespace, 0, -1)
+        connection.zcard(namespace)
         redis_result = connection.execute()
-        current_count += len(redis_result[-1])
+        current_count += redis_result[-1]
         if current_count <= self.limit:
             can_attempt = True
         return can_attempt
