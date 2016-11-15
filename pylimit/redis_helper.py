@@ -12,6 +12,9 @@ class RedisHelper(object):
         self.sentinel_service = sentinel_service
         self.password = password
 
+        self.connection = None
+        self.get_connection()  # Ensure connection is established
+
     def get_connection(self, is_read_only=False) -> redis.StrictRedis:
         """
         Gets a StrictRedis connection for normal redis or for redis sentinel based upon redis mode in configuration.
@@ -21,6 +24,9 @@ class RedisHelper(object):
 
         :return: Returns a StrictRedis connection
         """
+        if self.connection is not None:
+            return self.connection
+
         if self.is_sentinel:
             kwargs = dict()
             if self.password:
@@ -33,6 +39,7 @@ class RedisHelper(object):
         else:
             connection = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True,
                                            password=self.password)
+        self.connection = connection
         return connection
 
     def get_atomic_connection(self) -> StrictPipeline:
@@ -41,14 +48,4 @@ class RedisHelper(object):
 
         :return: Returns a StrictPipeline object
         """
-        if self.is_sentinel:
-            kwargs = dict()
-            if self.password:
-                kwargs["password"] = self.password
-            sentinel = Sentinel([(self.host, self.port)], **kwargs)
-            pipeline = sentinel.master_for(self.sentinel_service, decode_responses=True).pipeline(True)
-        else:
-            pipeline = redis.StrictRedis(host=self.host, port=self.port, decode_responses=True,
-                                         password=self.password).pipeline(True)
-        return pipeline
-
+        return self.get_connection().pipeline(True)
