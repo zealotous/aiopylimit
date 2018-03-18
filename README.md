@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/dmarkey/aiopylimit.svg?branch=master)](https://travis-ci.org/dmarkey/aiopylimit)
 # aiopylimit
 A distributed rate limiting library for python using leaky bucket algorithm and Redis supporting asyncio
 
