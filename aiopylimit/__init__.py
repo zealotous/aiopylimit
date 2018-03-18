@@ -1,3 +1,3 @@
-from aiopylimit.pyratelimit import AIOPyRateLimit
-from aiopylimit.pyratelimit_exception import AIOPyRateLimitException
-from aiopylimit.redis_helper import AIORedisHelper
+from aiopylimit.aiopyratelimit import AIOPyRateLimit
+from aiopylimit.aiopyratelimit_exception import AIOPyRateLimitException
+from aiopylimit.aioredis_helper import AIORedisHelper

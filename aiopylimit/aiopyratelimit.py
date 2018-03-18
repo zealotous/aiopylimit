@@ -1,7 +1,7 @@
 import time
 
-from aiopylimit.redis_helper import AIORedisHelper
-from aiopylimit.pyratelimit_exception import AIOPyRateLimitException
+from aiopylimit.aioredis_helper import AIORedisHelper
+from aiopylimit.aiopyratelimit_exception import AIOPyRateLimitException
 
 
 class AIOPyRateLimit(object):
