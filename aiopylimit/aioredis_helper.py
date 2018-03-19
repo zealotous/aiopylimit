@@ -1,6 +1,7 @@
 import aioredis
 from aioredis import create_sentinel
 from aioredis.commands import Pipeline
+from asyncio import get_event_loop
 
 
 class AIORedisHelper(object):
@@ -13,6 +14,7 @@ class AIORedisHelper(object):
         self.password = password
         self.db = db
         self.connection = None
+        self.loop = None
 
     async def get_connection(self, is_read_only=False) -> \
             aioredis.ConnectionsPool:
@@ -26,8 +28,10 @@ class AIORedisHelper(object):
 
         :return: Returns a StrictRedis connection
         """
-        if self.connection is not None:
+        if self.connection is not None and not self.loop.is_closed():  # 💩 for
+            #  when test runners create multiple loops
             return self.connection
+        self.loop = get_event_loop()
         if self.is_sentinel:
             kwargs = dict()
             if self.password:
