@@ -28,7 +28,7 @@ AIOPyRateLimit.init(redis_host="localhost", redis_port=6379)
 
 3.) Create a rate limit namespace
 ```
-limit = PyRateLimit()
+limit = AIOPyRateLimit()
 limit.create(60,                    # rate limit period in seconds
              100)                   # no of attempts in the time period
 ```
