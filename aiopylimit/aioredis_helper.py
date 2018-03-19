@@ -5,13 +5,13 @@ from aioredis.commands import Pipeline
 
 class AIORedisHelper(object):
     def __init__(self, host: str, port: int, is_sentinel=False,
-                 sentinel_service=None, password=None):
+                 sentinel_service=None, password=None, db=1):
         self.host = host
         self.port = port
         self.is_sentinel = is_sentinel
         self.sentinel_service = sentinel_service
         self.password = password
-
+        self.db = db
         self.connection = None
 
     async def get_connection(self, is_read_only=False) -> \
@@ -32,7 +32,9 @@ class AIORedisHelper(object):
             kwargs = dict()
             if self.password:
                 kwargs["password"] = self.password
-            sentinel = await create_sentinel([(self.host, self.port)], **kwargs)
+                kwargs['db'] = self.db
+            sentinel = await create_sentinel(
+                [(self.host, self.port)], **kwargs)
             if is_read_only:
                 connection = await sentinel.slave_for(self.sentinel_service)
             else:
@@ -40,7 +42,7 @@ class AIORedisHelper(object):
         else:
             connection = await aioredis.create_redis(
                 (self.host, self.port),
-                password=self.password)
+                password=self.password, db=self.db)
         self.connection = connection
         return connection
 

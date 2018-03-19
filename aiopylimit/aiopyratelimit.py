@@ -14,7 +14,7 @@ class AIOPyRateLimit(object):
     @classmethod
     def init(cls, redis_host: str, redis_port: int, is_sentinel_redis=False,
              redis_sentinel_service="mymaster",
-             redis_password=None, force_new_connection=False):
+             redis_password=None, force_new_connection=False, db=1):
         """
         Initializes redis connection
         :param force_new_connection: force a new connection if there's already
