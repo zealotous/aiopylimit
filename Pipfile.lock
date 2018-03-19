@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "90d1a6fda1b44e84ee972806240385b34f17aa7f04d884d81fc0c0a093f98b24"
+            "sha256": "1030f77758c2e674720f1b2d27ecbd9d051dee8ca15e894d49fb6bd5cf87ae5e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -93,6 +93,17 @@
                 "sha256:117bad36c1a787e1a8a659df35de53ba05f9f3398fb9e4ac17e80ad5903eb8c5"
             ],
             "version": "==3.4.2"
+        },
+        "setuptools-scm": {
+            "hashes": [
+                "sha256:0a640a3edecfac693bc33c303f6e7a58547371db0351db0f5d212f4bf2703067",
+                "sha256:633fa44557be5104651ac8167f79d75bccd0d182e9fd1e3b76299b03095c758a",
+                "sha256:8f567cb62dcc91d3873dfcee64956e74be806b25bf4863cb9aa2f3519f21f541",
+                "sha256:b2175003cd5253c803856be7c0da11ab3e0ecf266356b703e39c336178808f60",
+                "sha256:b9edb28d00403cd5b8c06d6771ed5225adfa24594fe9544a1d03ba4f4ec1d044",
+                "sha256:d6d255b98f2a7a7c05bb1cdcf209b5d6832153862819fc905a98be5e7e5be6b8"
+            ],
+            "version": "==1.16.1"
         },
         "six": {
             "hashes": [
