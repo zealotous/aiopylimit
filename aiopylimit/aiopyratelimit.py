@@ -7,9 +7,9 @@ from aiopylimit.aiopyratelimit_exception import AIOPyRateLimitException
 class AIOPyRateLimit(object):
     redis_helper = None  # type: AIORedisHelper
 
-    def __init__(self):
-        self.period = None  # type: int
-        self.limit = None  # type: int
+    def __init__(self, period, limit):
+        self.period = period  # type: int
+        self.limit = limit  # type: int
 
     @classmethod
     def init(cls, redis_host: str, redis_port: int, is_sentinel_redis=False,
@@ -40,20 +40,6 @@ class AIOPyRateLimit(object):
                                               is_sentinel=is_sentinel_redis,
                                               sentinel_service=redis_sentinel_service,
                                               password=redis_password)
-
-    def create(self, period: int, limit: int):
-        """
-        Creates a rate limiting rule with rate limiting period and attempt limit
-
-        :param period: Rate limiting period in seconds
-        :type period: int
-
-        :param limit: Number of attempts permitted by rate limiting within a given period
-        :type limit: int
-
-        """
-        self.period = period
-        self.limit = limit
 
     async def __can_attempt(self, namespace: str, add_attempt=True) -> bool:
         """

@@ -6,16 +6,14 @@ import asyncio
 
 class TestPyLimit(asynctest.TestCase):
     async def test_exception(self):
-        limit = AIOPyRateLimit()
+        limit = AIOPyRateLimit(10, 10)
         await self.assertAsyncRaises(AIOPyRateLimitException,
                                      limit.attempt('test_namespace'))
 
     async def test_throttle(self):
         AIOPyRateLimit.init(redis_host="localhost", redis_port=6379,
                             force_new_connection=True)
-        limit = AIOPyRateLimit()
-        limit.create(10,  # rate limit period in seconds
-                     10)  # no of attempts in the time period
+        limit = AIOPyRateLimit(10, 10)
         for x in range(0, 20):
             await asyncio.sleep(.5)
             if x < 10:
@@ -28,9 +26,7 @@ class TestPyLimit(asynctest.TestCase):
     async def test_peek(self):
         AIOPyRateLimit.init(redis_host="localhost", redis_port=6379,
                             force_new_connection=True)
-        limit = AIOPyRateLimit()
-        limit.create(10,  # rate limit period in seconds
-                     10)  # no of attempts in the time period
+        limit = AIOPyRateLimit(10, 10)
         for x in range(0, 10):
             self.assertTrue(await limit.attempt('test_namespace2'))
         self.assertTrue(await limit.is_rate_limited('test_namespace2'))
