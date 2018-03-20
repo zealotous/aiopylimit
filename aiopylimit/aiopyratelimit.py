@@ -39,6 +39,7 @@ class AIOPyRateLimit(object):
             cls.redis_helper = AIORedisHelper(host=redis_host, port=redis_port,
                                               is_sentinel=is_sentinel_redis,
                                               sentinel_service=redis_sentinel_service,
+                                              db=db,
                                               password=redis_password)
 
     async def __can_attempt(self, namespace: str, add_attempt=True) -> bool:
