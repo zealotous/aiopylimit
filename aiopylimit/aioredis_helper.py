@@ -44,7 +44,7 @@ class AIORedisHelper(object):
             else:
                 connection = await sentinel.master_for(self.sentinel_service)
         else:
-            connection = await aioredis.create_redis(
+            connection = await aioredis.create_reconnecting_redis(
                 (self.host, self.port),
                 password=self.password, db=self.db)
         self.connection = connection
