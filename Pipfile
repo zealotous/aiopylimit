@@ -1,23 +1,16 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
+aioredis = "<2"
+hiredis = "*"
 
-nose = "==1.3.7"
-aioredis = "*"
+[dev-packages]
 asynctest = "*"
 pytest = "*"
 setuptools-scm = "*"
 
-
-[dev-packages]
-
-
-
 [requires]
-
-python_version = "3.6"
+python_version = "3.9"
